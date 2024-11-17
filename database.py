@@ -214,6 +214,44 @@ def getUserClassesLeft(username):
 
 print(getUserClassesLeft("1"))
 
+def get_class_info(dept, course_number):
+    """
+    Fetch class information from the database.
+    
+    :param dept: Department code (e.g., 'CSC').
+    :param course_number: Course number (e.g., '279').
+    :return: A dictionary containing class details.
+    """
+    class_info = classes.find_one({
+        'department': dept,
+        'course_number': course_number
+    })
+
+    if class_info:
+        return {
+            "name": f"{class_info['department']} {class_info['course_number']}",
+            "score": class_info.get('credits', 'N/A'),  # Example: Replace with relevant rating/score field
+            "professor": class_info.get('professor', 'N/A'),
+            "ranking": "N/A",  # Add logic for ranking if needed
+            "difficulty": "N/A",  # Add difficulty level if present in DB
+            "wta": "N/A",  # Add 'Would Take Again' logic
+            "start": class_info.get('start_time', 'N/A'),
+            "end": class_info.get('end_time', 'N/A'),
+            "term": class_info.get('term', 'N/A')
+        }
+    else:
+        return {
+            "name": f"{dept} {course_number}",
+            "score": "N/A",
+            "professor": "N/A",
+            "ranking": "N/A",
+            "difficulty": "N/A",
+            "wta": "N/A",
+            "start": "N/A",
+            "end": "N/A",
+            "term": "N/A"
+        }
+
 
 # users.insert_one({
 #     'username': 'test_user',

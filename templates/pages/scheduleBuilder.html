@@ -53,7 +53,21 @@
                 <div>
                     <h2>Your New Schedule</h2>
                     <div class="scheduleOutputMain">
+                        {% if schedule %}
+                            {% for semester, classes in schedule.items() %}
+                                <h3>{{ semester }}</h3>
+                                <div class="semesterClasses">
+                                    {% for cls in classes %}
+                                        <p>{{ cls.name }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No schedule available yet. Please submit the form to generate a schedule.</p>
+                        {% endif %}
                     </div>
+                    
+                    
 
                 </div>
 

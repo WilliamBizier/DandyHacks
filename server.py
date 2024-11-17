@@ -197,23 +197,58 @@ def schedulebuilder():
 
     else:
         if request.method == 'GET':
-            return render_template('/pages/scheduleBuilder.html')
+            schedule = {}
+            return render_template('pages/scheduleBuilder.html', schedule=schedule)
 
         else:
             user = database.get_user_by_token(token=token)
             username = user.username
             goals = request.form.get("goals")
 
-            # preprossing
-            classesReq, classesCustom, classesLeft = database.getUserClassesLeft(
-                username)
-            semester = user.semester
+            # # preprossing
+            # classesReq, classesCustom, classesLeft = database.getUserClassesLeft(
+            #     username)
+            # semester = user.semester
 
-            gpt_json = {"custom_courses": classesCustom, "required_courses": classesReq, "goals": goals,
-                       "classesLeft": classesLeft, "nextSem": semester}
+            # gpt_json = {"custom_courses": classesCustom, "required_courses": classesReq, "goals": goals,
+            #            "classesLeft": classesLeft, "nextSem": semester}
             
-            print(goals)
-            return render_template('/pages/scheduleBuilder.html')
+            # print(goals)
+            # return render_template('/pages/scheduleBuilder.html')
+            
+            dummy_data = {
+                7: ["CSC 171-1"],
+                8: ["CSC 175-1"]
+            }
+            
+            # Map semester keys
+            semester_map = {
+                1: "Freshman Fall", 2: "Freshman Spring",
+                3: "Sophomore Fall", 4: "Sophomore Spring",
+                5: "Junior Fall", 6: "Junior Spring",
+                7: "Senior Fall", 8: "Senior Spring"
+            }
 
+            schedule = {}
+            for key, classes in dummy_data.items():
+                semester = semester_map[key]
+                schedule[semester] = []
+                for cls in classes:
+                    dept, course = cls.split(" ")[0], cls.split(" ")[1]
+                    # Mocked class data
+                    course_info = {
+                        "name": f"{dept} {course}",
+                        "score": "N/A",
+                        "professor": "N/A",
+                        "ranking": "N/A",
+                        "difficulty": "N/A",
+                        "wta": "N/A",
+                        "start": "N/A",
+                        "end": "N/A",
+                        "term": semester
+                    }
+                    schedule[semester].append(course_info)
+            
+            return render_template('/pages/scheduleBuilder.html', schedule=schedule)
 
 app.run(debug=True, host='127.0.0.1', port=8080)
