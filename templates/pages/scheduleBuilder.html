@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>balls</title>
-        <link rel="stylesheet" href="static/CSS-pages/dashBoard.css">
+        <link rel="stylesheet" href="static/CSS-pages/scheduleBuilder.css">
 
     </head>
 
@@ -17,25 +17,68 @@
 
             <div>
                 <!-- class stats forms -->
-                <form action="{{url_for('signup')}}" method="POST" class='gigaForm'>
-                    <label for="goals">Your Goals</label>
-                <input type="text" id="goals" name="goals" required>
 
-                <h3> Class Stats You Desire </h3>
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email" required>
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email" required>
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email" required>
+                <div class="gigaForm">
+                    <h2>Traits You desire</h2>
+                    <form action="{{url_for('schedulebuilder')}}" method="POST">
+                        <label for="goals">Your Goals</label>
+                        <input type="text" id="goals" name="goals" required>
 
+                        <h3> Class Stats You Desire </h3>
+                        <label for="classDiff">Class Difficulty
+                            Threshold</label>
+                        <select id="classDiff" name="major" required>
+                            <option value="5">Sweat</option>
+                            <option value="4">Hard</option>
+                            <option value="3">Medium</option>
+                            <option value="2">Easy</option>
+                            <option value="1">Brain Dead</option>
+                        </select>
 
+                        <label for="profQuality">Professor Lowest Quality
+                            Acceptable</label>
+                        <select id="profQuality" name="major" required>
+                            <option value="5">The GOAT</option>
+                            <option value="4">Great</option>
+                            <option value="3">Okay</option>
+                            <option value="2">no comment</option>
+                            <option value="1">un dying hatrated</option>
+                        </select>
 
+                    </form>
+                </div>
 
-                </form>
-    
+                <!-- schedule output -->
+                <div>
+                    <h2>Schedule Choices</h2>
+                    <div class="scheduleOutputMain">
+                        <div>
+                            <h2>Req Classes</h2>
+                            <div class="gigaForm scheduleThing">
+                            </div>
 
+                        </div>
+                        <div>
+                            <h2>Free Choice Classes </h2>
+                            <div class="gigaForm scheduleThing">
 
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- {% set score = "69" %}
+                {% set className = "Meat Riding" %}
+                {% set professor = "KSI" %}
+                {% set ranking = "1st" %}
+                {% set diff = "alot" %}
+                {% set wta = "nawh" %}
+                {% set start = "early" %}
+                {% set end = "late" %}
+                {% set term = "late" %}
+
+                {% include '/components/classCards.html' %} -->
 
             </body>
 

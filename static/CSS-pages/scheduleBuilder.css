@@ -1,0 +1,31 @@
+@import url('../global.css');
+
+
+
+.gigaForm{ 
+    border-radius: 10px;
+    border-color: var(--accent-color);
+    border-width: 2px;
+    border-style: solid;
+    padding: 20px;
+}
+
+.scheduleOutputMain{
+    display: flex;
+    flex-direction: column;
+    
+}
+.scheduleThing{
+    margin: 20px;
+
+}
+
+
+
+/* tablet */
+@media only screen and (max-width: 900px) {
+}
+
+/* phone */
+@media only screen and (max-width: 600px) {
+}

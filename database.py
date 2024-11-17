@@ -27,7 +27,6 @@ class user:
         self.socials = user_obj['socials']
 
 
-
 # users -> {username:username,passhash:passwordhash,salt:passwordsalt,_id:user_id,token,exp_date}
 
 # all users are students
@@ -127,6 +126,33 @@ def check_token(token):
             return False
         else:
             return True
+    else:
+        return False
+
+
+def getUserClassesLeft(username):
+    # Define a sample curriculum for Computer Science
+    required_classes_cs = {
+        "Computer Science": [
+            "CS101", "CS102", "CS201", "CS202",
+            "CS301", "CS302", "CS401", "CS402"
+        ]
+    }
+
+    # valiud user check
+    user = users.find_one({'username': username})
+    if user is None:
+        return False
+
+    major = user['major']
+    classes_taken = user['classes']
+
+    if major == "Computer Science":
+        CS_classReq = ["171", "172", "173", "242", "252", "254", "280", "282"]
+        totalCustom = 13
+        requiredClasses = []
+        customClasses = []
+
     else:
         return False
 

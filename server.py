@@ -100,10 +100,10 @@ def signup():
         email = request.form.get('email', None)
         password_confirm = request.form.get('password_confirm', None)
         major = request.form.get('major', None)
-        
+
         departments = request.form.getlist('department[]')
         course_numbers = request.form.getlist('course_number[]')
-        
+
         # classes dictionary
         classes = {}
         for dept, course in zip(departments, course_numbers):
@@ -111,8 +111,6 @@ def signup():
                 classes[dept].append(course)
             else:
                 classes[dept] = [course]
-        
-        
 
         # Error handling
         if password != password_confirm or not password:
@@ -136,14 +134,13 @@ def signup():
                 'pages/signUp.html', error=error, login=login), 200)
             response.headers['X-Content-Type-Options'] = 'nosniff'
             return response
-        
+
         if not major:
             error = "how did you even do this you bastard"
             response = make_response(render_template(
                 'pages/signUp.html', error=error, login=login), 200)
             response.headers['X-Content-Type-Options'] = 'nosniff'
-            return response 
-            
+            return response
 
         # Escape and add user to database
         username = html.escape(username)
@@ -169,7 +166,7 @@ def dashboard():
     token = request.cookies.get('auth', None)
     if (token != None and database.check_token(token=token)):
         user = database.get_user_by_token(token=token)
-        return render_template('/pages/dashBoard.html', username = user.username)
+        return render_template('/pages/dashBoard.html', username=user.username)
     else:
         response = make_response(redirect(url_for('index', _external=True)))
         response.set_cookie('auth', '', max_age=0)
@@ -187,24 +184,30 @@ def profile():
         response.set_cookie('auth', '', max_age=0)
         return response
 
+
 @app.route('/schedulebuilder')
 def schedulebuilder():
     token = request.cookies.get('auth', None)
-    if (token != None and database.check_token(token=token)):
-        user = database.get_user_by_token(token=token)
-        return render_template('/pages/scheduleBuilder.html')
-    else:
+    if token == None and database.check_token(token=token) == False:
         response = make_response(redirect(url_for('index', _external=True)))
         response.set_cookie('auth', '', max_age=0)
         return response
 
+    else:
+        if request.method == 'GET':
+            return render_template('/pages/scheduleBuilder.html')
 
-@app.route('/inputClasses')
-def inputclasses(): 
-    pass
+        if request.method == 'POST':
+            user = database.get_user_by_token(token=token)
+            # preprossing
 
-@app.route('/gptFunc')
-def gptFunc():
-    pass
+            # GPT
+
+            # Rate My Professor
+            
+            # class outputs for schedule
+            
+            # re-render the page with new class cards
+
 
 app.run(debug=True, host='127.0.0.1', port=8080)

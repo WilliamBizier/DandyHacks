@@ -1,0 +1,27 @@
+@import url('../global.css');
+
+.classCard {
+    background-color: var(--box-color);
+    color: var(--textMain);
+    border-radius: 10px;
+    width: 20vw; 
+    padding: 10px 10px 10px 10px; 
+    margin: 10px;
+
+}
+
+p{
+    font-size: 14px;
+}
+
+.classCard h2{ 
+    color: var(--accent-color)
+}
+
+/* tablet */
+@media only screen and (max-width: 900px) {
+}
+
+/* phone */
+@media only screen and (max-width: 600px) {
+}
