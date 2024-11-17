@@ -150,53 +150,49 @@ def check_token(token):
 
 
 def getUserClassesLeft(username):
-    # Define a sample curriculum for Computer Science
-    required_classes_cs = {
-        "Computer Science": [
-            "CS101", "CS102", "CS201", "CS202",
-            "CS301", "CS302", "CS401", "CS402"
-        ]
-    }
-
-    # valiud user check
+    # Validate if the user exists
     user = users.find_one({'username': username})
     if user is None:
         return False
 
     major = user['major']
-    classes_taken = user['classes']
+    classes_taken = user['classes']  # Example: {'CSC': ['171', '172'], 'ECON': ['101']}
     print(classes_taken)
 
     if major == "Computer Science":
-        # Required classes for Computer Science major
+        # List of required CS classes
         CS_classReq = ["171", "172", "173", "242", "252", "254", "280", "282"]
-        totalCustom = 13  # Total number of custom classes allowed
+        totalCustom = 13  # Total custom classes allowed
         requiredClasses = []
         customClasses = []
 
-        # Check the CSE department first
-        if 'CSE' in classes_taken:
-            taken_CSE = classes_taken['CSE']
+        # Use the correct collection to find required classes
+        required_classes_cursor = classes_collection.find({'department': 'CSC'})
+        required_classes = list(required_classes_cursor)
 
-            # Find missing required classes
-            missing_classes = [
-                cls for cls in CS_classReq if cls not in taken_CSE]
-            requiredClasses.extend(missing_classes)
+        # Identify missing required classes
+        missing_required = [
+            cls for cls in required_classes
+            if cls['course_number'] not in classes_taken.get('CSC', [])
+        ]
 
-            # Calculate excess classes beyond required ones
-            extra_classes = [
-                cls for cls in taken_CSE if cls not in CS_classReq]
-            totalCustom = totalCustom - len(extra_classes)
+        # Identify eligible custom classes
+        for cls in required_classes:
+            prereqs_met = all(
+                prereq_num in classes_taken.get(prereq_dept, [])
+                for prereq_dept, prereq_nums in cls['prereqs'].items()
+                for prereq_num in prereq_nums
+            )
+            if prereqs_met and cls['course_number'] not in classes_taken.get('CSC', []):
+                customClasses.append(cls)
 
-            return extra_classes, totalCustom
-
-        else:
-            # If no CSE classes are taken
-            return CS_classReq[:], totalCustom
+        return missing_required, customClasses
 
     else:
         return False
 
+
+print(getUserClassesLeft("1"))
 
 
 
