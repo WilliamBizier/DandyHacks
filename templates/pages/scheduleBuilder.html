@@ -55,10 +55,20 @@
                     <div class="scheduleOutputMain">
                         {% if schedule %}
                             {% for semester, classes in schedule.items() %}
+                                <hr>
                                 <h3>{{ semester }}</h3>
                                 <div class="semesterClasses">
                                     {% for cls in classes %}
-                                        <p>{{ cls.name }}</p>
+                                        <p>Name: {{ cls.name }}</p>
+                                        <p>Score: {{ cls.score }}</p>
+                                        <p>Professor: {{ cls.professor }}</p>
+                                        <p>Ranking: {{ cls.ranking }}</p>
+                                        <p>Difficulty: {{ cls.difficulty }}</p>
+                                        <p>WTA: {{ cls.wta }}</p>
+                                        <p>Start Time: {{ cls.start }}</p>
+                                        <p>End Time: {{ cls.end }}</p>
+                                        <p>Term: {{ cls.term }}</p>
+                        
                                     {% endfor %}
                                 </div>
                             {% endfor %}
@@ -66,6 +76,7 @@
                             <p>No schedule available yet. Please submit the form to generate a schedule.</p>
                         {% endif %}
                     </div>
+                    
                     
                     
 
