@@ -73,5 +73,71 @@ def login():
     response.headers['X-Content-Type-Options'] = 'nosniff'
     return response
 
+from flask import Flask, render_template, request, redirect, url_for, make_response
+import html
+import secrets
+import datetime
+
+@app.route('/signup', methods=['POST', 'GET'])
+def signup():
+    # Checks if the user is signed in
+    token = request.cookies.get('auth', None)
+    if token is not None and database.check_token(token=token):
+        response = make_response(redirect(url_for('index', _external=True)))
+        response.set_cookie('auth', token)
+        return response
+
+    # If the user is requesting the signup form
+    if request.method == 'GET':
+        response = make_response(render_template(
+            'pages/signUp.html', error='', login=login), 200)
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        return response
+    
+    # Handle signup form submission
+    else:
+        username = request.form.get('username', None)
+        password = request.form.get('password', None)
+        email = request.form.get('email', None)
+        password_confirm = request.form.get('password_confirm', None)
+        
+        # Error handling
+        if password != password_confirm or not password:
+            error = "Password empty or do not match"
+            response = make_response(render_template(
+                'pages/signUp.html', error=error, login=login), 200)
+            response.headers['X-Content-Type-Options'] = 'nosniff'
+            return response
+        
+        if not username or username.strip() == '':
+            error = "Username Field Empty"
+            response = make_response(render_template(
+                'pages/signUp.html', error=error, login=login), 200)
+            response.headers['X-Content-Type-Options'] = 'nosniff'
+            return response
+
+        if not email or "@u.rochester.edu" not in email:
+            error = "You are not a student"
+            response = make_response(render_template(
+                'pages/signUp.html', error=error, login=login), 200)
+            response.headers['X-Content-Type-Options'] = 'nosniff'
+            return response
+        
+        # Escape and add user to database
+        username = html.escape(username)
+        if database.add_user(username, password, email):
+            token = secrets.token_hex()
+            database.set_user_token(
+                username, token, datetime.datetime.now(tz=datetime.timezone.utc))
+            response = make_response(redirect(url_for('index', _external=True)))
+            response.set_cookie('auth', token)
+            return response
+        else:
+            error = "Username Already Exists"
+            response = make_response(render_template(
+                'pages/signUp.html', error=error, login=login), 200)
+            response.headers['X-Content-Type-Options'] = 'nosniff'
+            return response
+
 
 app.run(debug=True, host='127.0.0.1', port=8080)
