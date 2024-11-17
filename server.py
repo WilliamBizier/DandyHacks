@@ -206,8 +206,8 @@ def schedulebuilder():
             # Your existing code to process goals and generate the schedule
             # For now, we'll use dummy data
             dummy_data = {
-                7: ["CSC 171-1", "CSC 477-01"],
-                8: ["CSC 175-1"]
+                7: ["CSC 459-1", "CSC 477-01", "CSC 445-01"],
+                8: ["CSC 480-1", "CSC 482-01", "CSC 551-01", "CSC 484-1"]
             }
 
             # Map semester keys
@@ -229,7 +229,8 @@ def schedulebuilder():
                     course_number = course_section.split('-')[0]  # "171"
 
                     # Fetch class information
-                    course_info = database.get_class_info(dept_course, course_number)
+                    course_info = database.get_class_info(
+                        dept_course, course_number)
                     schedule[semester].append(course_info)
 
             return render_template('pages/scheduleBuilder.html', schedule=schedule)

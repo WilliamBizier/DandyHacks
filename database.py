@@ -265,49 +265,49 @@ def get_class_info(dept, course_number):
 # this is used to get the CSV into the DB
 
 
-# def process_and_insert_classes(csv_file_path, db):
-#     import pandas as pd
+def process_and_insert_classes(csv_file_path, db):
+    import pandas as pd
 
-#     # Load the CSV file
-#     data = pd.read_csv(csv_file_path)
+    # Load the CSV file
+    data = pd.read_csv(csv_file_path)
     
-#     # Reference to the classes collection
-#     classes_collection = db['classes']
+    # Reference to the classes collection
+    classes_collection = db['classes']
     
-#     for _, row in data.iterrows():
-#         # Split the 'Code' column into department and course number
-#         code = row['Code'].strip()
-#         dpt, course_number = code.split(' ')[0], code.split(' ')[1].split('-')[0]
+    for _, row in data.iterrows():
+        # Split the 'Code' column into department and course number
+        code = row['Code'].strip()
+        dpt, course_number = code.split(' ')[0], code.split(' ')[1].split('-')[0]
         
-#         # Process the 'Prereqs' into a dictionary
-#         prereq_raw = str(row['Prereqs']).strip()
-#         prereqs_dict = {}
-#         if prereq_raw and prereq_raw != 'nan':
-#             prereq_list = prereq_raw.split(',')
-#             for prereq in prereq_list:
-#                 prereq_dpt, prereq_num = prereq.strip().split(' ')[0], prereq.strip().split(' ')[1]
-#                 if prereq_dpt not in prereqs_dict:
-#                     prereqs_dict[prereq_dpt] = []
-#                 prereqs_dict[prereq_dpt].append(prereq_num)
+        # Process the 'Prereqs' into a dictionary
+        prereq_raw = str(row['Prereqs']).strip()
+        prereqs_dict = {}
+        if prereq_raw and prereq_raw.lower() != 'nan':
+            prereq_list = prereq_raw.split(',')
+            for prereq in prereq_list:
+                prereq_dpt, prereq_num = prereq.strip().split(' ')[0], prereq.strip().split(' ')[1]
+                if prereq_dpt not in prereqs_dict:
+                    prereqs_dict[prereq_dpt] = []
+                prereqs_dict[prereq_dpt].append(prereq_num)
 
-#         # Handle missing columns safely
-#         class_document = {
-#             "department": dpt,
-#             "course_number": course_number,
-#             "title": row['Title'],
-#             "credits": row['Credits'],
-#             "start_time": row.get('Begin', 'N/A'),  # Default to 'N/A' if missing
-#             "end_time": row.get('End', 'N/A'),      # Default to 'N/A' if missing
-#             "term": row.get('Term', 'N/A'),         # Default to 'N/A' if missing
-#             "professor": row.get('professor', 'N/A'),  # Handle missing professor
-#             "prereqs": prereqs_dict
-#         }
+        # Handle missing columns safely
+        class_document = {
+            "department": dpt,
+            "course_number": course_number,
+            "title": row.get('Title', 'Untitled'),
+            "credits": row.get('Credits', '0'),
+            "start_time": row.get('Begin', 'N/A'),  # Default to 'N/A' if missing
+            "end_time": row.get('End', 'N/A'),      # Default to 'N/A' if missing
+            "term": row.get('Term', 'N/A'),         # Default to 'N/A' if missing
+            "professor": row.get('professor', 'N/A'),  # Handle missing professor
+            "prereqs": prereqs_dict
+        }
         
-#         # Insert into the database
-#         try:
-#             classes_collection.insert_one(class_document)
-#         except Exception as e:
-#             print(f"Error inserting document: {e}")
+        # Insert into the database
+        try:
+            classes_collection.insert_one(class_document)
+        except Exception as e:
+            print(f"Error inserting document: {e}")
 
         
-# process_and_insert_classes("courses_lectures.csv", db)
+process_and_insert_classes("courses_lectures.csv", db)
