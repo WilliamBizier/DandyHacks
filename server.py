@@ -169,7 +169,7 @@ def dashboard():
     token = request.cookies.get('auth', None)
     if (token != None and database.check_token(token=token)):
         user = database.get_user_by_token(token=token)
-        return render_template('/pages/dashBoard.html')
+        return render_template('/pages/dashBoard.html', username = user.username)
     else:
         response = make_response(redirect(url_for('index', _external=True)))
         response.set_cookie('auth', '', max_age=0)
