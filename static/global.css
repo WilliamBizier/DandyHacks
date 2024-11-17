@@ -1,0 +1,18 @@
+:root {
+
+    --background: #323437; 
+    --text-main: #D1D0C5; 
+    --text-secondary: #646669;
+    --box-color: #2C2E31; 
+    --accent-color: #E2B712; 
+    --accent-color-muted: #e2b81249;
+
+    --screenFillSize: 400;
+    --headerSize: 60; 
+    --header2: 40; 
+    --header3: 20;
+    --text: 30;
+    --subText: 28; 
+
+
+}

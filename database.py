@@ -8,7 +8,7 @@ import random
 import string
 
 mongo_client = MongoClient("localhost")
-db = mongo_client["gnome_hat"]
+db = mongo_client["GigaClassGen"]
 users = db['users']
 classrooms = db['classrooms']
 

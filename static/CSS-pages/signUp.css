@@ -1,0 +1,10 @@
+@import url('../global.css');
+
+
+/* tablet */
+@media only screen and (max-width: 900px) {
+}
+
+/* phone */
+@media only screen and (max-width: 600px) {
+}
