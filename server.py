@@ -55,14 +55,16 @@ def login():
                 if ph == user.passhash:
                     token = secrets.token_hex()
                     database.set_user_token(
-                        username, token, datetime.datetime.now(tz=datetime.timezone.utc)
+                        username, token, datetime.datetime.now(
+                            tz=datetime.timezone.utc)
                     )
-                    response = make_response(redirect(url_for('index', _external=True)))
+                    response = make_response(
+                        redirect(url_for('index', _external=True)))
                     response.set_cookie('auth', token)
                     return response
                 else:
                     error = 'Password Incorrect'
-        
+
         # If there's an error, render the index page with the error message
         response = make_response(render_template('index.html', error=error))
         response.headers['X-Content-Type-Options'] = 'nosniff'
@@ -73,10 +75,6 @@ def login():
     response.headers['X-Content-Type-Options'] = 'nosniff'
     return response
 
-from flask import Flask, render_template, request, redirect, url_for, make_response
-import html
-import secrets
-import datetime
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -93,23 +91,25 @@ def signup():
             'pages/signUp.html', error='', login=login), 200)
         response.headers['X-Content-Type-Options'] = 'nosniff'
         return response
-    
+
     # Handle signup form submission
     else:
         username = request.form.get('username', None)
         password = request.form.get('password', None)
         email = request.form.get('email', None)
         password_confirm = request.form.get('password_confirm', None)
-        
+
         # Error handling
         if password != password_confirm or not password:
+            print("whoops 4")
             error = "Password empty or do not match"
             response = make_response(render_template(
                 'pages/signUp.html', error=error, login=login), 200)
             response.headers['X-Content-Type-Options'] = 'nosniff'
             return response
-        
+
         if not username or username.strip() == '':
+            print("whoop2s")
             error = "Username Field Empty"
             response = make_response(render_template(
                 'pages/signUp.html', error=error, login=login), 200)
@@ -117,19 +117,22 @@ def signup():
             return response
 
         if not email or "@u.rochester.edu" not in email:
+            print("whoops")
             error = "You are not a student"
             response = make_response(render_template(
                 'pages/signUp.html', error=error, login=login), 200)
             response.headers['X-Content-Type-Options'] = 'nosniff'
             return response
-        
+
         # Escape and add user to database
         username = html.escape(username)
         if database.add_user(username, password, email):
+            print("added apparently")
             token = secrets.token_hex()
             database.set_user_token(
                 username, token, datetime.datetime.now(tz=datetime.timezone.utc))
-            response = make_response(redirect(url_for('index', _external=True)))
+            response = make_response(
+                redirect(url_for('index', _external=True)))
             response.set_cookie('auth', token)
             return response
         else:
@@ -139,5 +142,19 @@ def signup():
             response.headers['X-Content-Type-Options'] = 'nosniff'
             return response
 
+
+@app.route('/dashboard')
+def dashboard():
+
+    token = request.cookies.get('auth', None)
+    if (token != None and database.check_token(token=token)):
+        user = database.get_user_by_token(token=token)
+        classrooms = database.get_user_classes(user.username)
+        print(classrooms)
+        return render_template('dashboard.html', username=user.username, isStudent=user.student, classes=classrooms)
+    else:
+        response = make_response(redirect(url_for('index', _external=True)))
+        response.set_cookie('auth', '', max_age=0)
+        return response
 
 app.run(debug=True, host='127.0.0.1', port=8080)
