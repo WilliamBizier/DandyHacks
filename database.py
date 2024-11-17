@@ -149,6 +149,7 @@ def check_token(token):
         return False
 
 
+
 def getUserClassesLeft(username):
     # Validate if the user exists
     user = users.find_one({'username': username})
@@ -212,7 +213,6 @@ def getUserClassesLeft(username):
 
 
 print(getUserClassesLeft("1"))
-
 
 
 # users.insert_one({
