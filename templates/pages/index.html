@@ -1,15 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Balls and Cock</title>
-    <link
-      rel="stylesheet"
-      href="{{url_for('send_static',path='static/CSS-pages/index.css')}}"
-    />
-  </head>
 
-  <body>
-    <h1>balls and fucken cock</h1>
+<head>
+  <title>Schedule-intaor</title>
+  <link rel="stylesheet" href="{{url_for('send_static',path='static/CSS-pages/index.css')}}" />
+</head>
 
-  </body>
+<body>
+  <!-- the yap -->
+  <div>
+    <h1> Schedule-inator</h1>
+    <p>we are the copol schedule and generator that allows you to talk to 
+      people who have taken the class, read reveiws, and AI scheudle generaton </p>
+
+  </div>
+
+  <!-- sign up and login forms -->
+  <div>
+
+    <!-- log in -->
+    <div>
+      <h2>Login</h2>
+      <form action="{{ url_for('login') }}" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+      
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        
+        <input type="submit" value="Log In">
+      </form>
+      
+      {% if error %}
+        <p class="Error">{{ error }}</p>
+      {% endif %}
+
+
+    </div>
+    <!-- sign up -->
+    <div>
+      <h2>Sign Up For this Cool Shit</h2>
+      <button>Sign Up Bozo</button>
+
+    </div>
+
+  </div>
+
+</body>
+
 </html>
