@@ -163,8 +163,10 @@ def getUserClassesLeft(username):
         # List of required CS classes
         CS_classReq = ["171", "172", "173", "242", "252", "254", "280", "282"]
         totalCustom = 13  # Total custom classes allowed
-        requiredClasses = []
-        customClasses = []
+        
+        # Dictionaries to hold classes categorized by term
+        requiredClasses = {"fall": [], "spring": []}
+        customClasses = {"fall": [], "spring": []}
 
         # Use the correct collection to find required classes
         required_classes_cursor = classes_collection.find({'department': 'CSC'})
@@ -176,6 +178,12 @@ def getUserClassesLeft(username):
             if cls['course_number'] not in classes_taken.get('CSC', [])
         ]
 
+        # Organize missing required classes by term
+        for cls in missing_required:
+            term = cls.get('term', '').lower()  # e.g., "fall" or "spring"
+            if term in requiredClasses:
+                requiredClasses[term].append(cls)
+
         # Identify eligible custom classes
         for cls in required_classes:
             prereqs_met = all(
@@ -184,9 +192,20 @@ def getUserClassesLeft(username):
                 for prereq_num in prereq_nums
             )
             if prereqs_met and cls['course_number'] not in classes_taken.get('CSC', []):
-                customClasses.append(cls)
+                term = cls.get('term', '').lower()  # e.g., "fall" or "spring"
+                if term in customClasses:
+                    customClasses[term].append(cls)
 
-        return missing_required, customClasses
+        # Identify extra CSC courses beyond the required ones
+        extra_classes = [
+            cls for cls in classes_taken.get('CSC', [])
+            if cls not in CS_classReq
+        ]
+
+        # Calculate the remaining custom class slots
+        remaining_custom_slots = totalCustom - len(extra_classes)
+
+        return requiredClasses, customClasses, remaining_custom_slots
 
     else:
         return False
