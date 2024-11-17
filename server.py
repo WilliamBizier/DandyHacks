@@ -67,7 +67,8 @@ def login():
                     error = 'Password Incorrect'
 
         # If there's an error, render the index page with the error message
-        response = make_response(render_template('/pages/index.html', error=error))
+        response = make_response(render_template(
+            '/pages/index.html', error=error))
         response.headers['X-Content-Type-Options'] = 'nosniff'
         return response
 
@@ -186,7 +187,7 @@ def profile():
         return response
 
 
-@app.route('/schedulebuilder')
+@app.route('/schedulebuilder', methods=['POST', 'GET'])
 def schedulebuilder():
     token = request.cookies.get('auth', None)
     if token == None and database.check_token(token=token) == False:
@@ -198,17 +199,21 @@ def schedulebuilder():
         if request.method == 'GET':
             return render_template('/pages/scheduleBuilder.html')
 
-        if request.method == 'POST':
+        else:
             user = database.get_user_by_token(token=token)
+            username = user.username
+            goals = request.form.get("goals")
+
             # preprossing
+            classesReq, classesCustom, classesLeft = database.getUserClassesLeft(
+                username)
+            semester = user.semester
 
-            # GPT
-
-            # Rate My Professor
+            gpt_json = {"custom_courses": classesCustom, "required_courses": classesReq, "goals": goals,
+                       "classesLeft": classesLeft, "nextSem": semester}
             
-            # class outputs for schedule
-            
-            # re-render the page with new class cards
+            print(goals)
+            return render_template('/pages/scheduleBuilder.html')
 
 
 app.run(debug=True, host='127.0.0.1', port=8080)
