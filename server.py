@@ -103,6 +103,7 @@ def signup():
 
         departments = request.form.getlist('department[]')
         course_numbers = request.form.getlist('course_number[]')
+        semester = request.form.getlist('semester')
 
         # classes dictionary
         classes = {}
@@ -144,7 +145,7 @@ def signup():
 
         # Escape and add user to database
         username = html.escape(username)
-        if database.add_user(username, password, email, major, classes):
+        if database.add_user(username, password, email, major, classes, semester):
             print("added apparently")
             token = secrets.token_hex()
             database.set_user_token(

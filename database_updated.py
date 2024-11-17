@@ -10,8 +10,6 @@ import string
 mongo_client = MongoClient("localhost", 27017)
 db = mongo_client["GigaClassGen"]
 users = db['users']
-classes_collection = db['classes']
-
 
 
 class user:
@@ -27,7 +25,6 @@ class user:
         self.major = user_obj['major']
         self.goals = user_obj['goals']
         self.socials = user_obj['socials']
-        self.semester = user_obj['semester']
 
 
 class classes:
@@ -48,7 +45,7 @@ class classes:
 # users -> {username:username,passhash:passwordhash,salt:passwordsalt,_id:user_id,token,exp_date}
 
 # all users are students
-def add_user(username, password, email, major, classes, semester):
+def add_user(username, password, email, major, classes):
     check = users.find_one({'username': username})
     if check is not None:
         return False  # Username already exists
@@ -65,7 +62,6 @@ def add_user(username, password, email, major, classes, semester):
             'classes': classes,
             'major': major,
             'goals': "",
-            'semester': semester[0],
             'socials': {}
         })
         return True
@@ -198,6 +194,7 @@ def getUserClassesLeft(username):
         return False
 
 
+print(getUserClassesLeft("BallSack"))
 
 
 # users.insert_one({
@@ -212,52 +209,44 @@ def getUserClassesLeft(username):
 # print("Manual user inserted.")
 
 
-# this is used to get the CSV into the DB
 
+def process_and_insert_classes(csv_file_path, db):
+    import pandas as pd
 
-# def process_and_insert_classes(csv_file_path, db):
-#     import pandas as pd
-
-#     # Load the CSV file
-#     data = pd.read_csv(csv_file_path)
+    # Load the CSV file
+    data = pd.read_csv(csv_file_path)
     
-#     # Reference to the classes collection
-#     classes_collection = db['classes']
+    # Reference to the classes collection
+    classes_collection = db['classes']
     
-#     for _, row in data.iterrows():
-#         # Split the 'Code' column into department and course number
-#         code = row['Code'].strip()
-#         dpt, course_number = code.split(' ')[0], code.split(' ')[1].split('-')[0]
+    for _, row in data.iterrows():
+        # Split the 'Code' column into department and course number
+        code = row['Code'].strip()
+        dpt, course_number = code.split(' ')[0], code.split(' ')[1].split('-')[0]
         
-#         # Process the 'Prereqs' into a dictionary
-#         prereq_raw = str(row['Prereqs']).strip()
-#         prereqs_dict = {}
-#         if prereq_raw and prereq_raw != 'nan':
-#             prereq_list = prereq_raw.split(',')
-#             for prereq in prereq_list:
-#                 prereq_dpt, prereq_num = prereq.strip().split(' ')[0], prereq.strip().split(' ')[1]
-#                 if prereq_dpt not in prereqs_dict:
-#                     prereqs_dict[prereq_dpt] = []
-#                 prereqs_dict[prereq_dpt].append(prereq_num)
+        # Process the 'Prereqs' into a dictionary
+        prereq_raw = str(row['Prereqs']).strip()
+        prereqs_dict = {}
+        if prereq_raw and prereq_raw != 'nan':
+            prereq_list = prereq_raw.split(',')
+            for prereq in prereq_list:
+                prereq_dpt, prereq_num = prereq.strip().split(' ')[0], prereq.strip().split(' ')[1]
+                if prereq_dpt not in prereqs_dict:
+                    prereqs_dict[prereq_dpt] = []
+                prereqs_dict[prereq_dpt].append(prereq_num)
 
-#         # Handle missing columns safely
-#         class_document = {
-#             "department": dpt,
-#             "course_number": course_number,
-#             "title": row['Title'],
-#             "credits": row['Credits'],
-#             "start_time": row.get('Begin', 'N/A'),  # Default to 'N/A' if missing
-#             "end_time": row.get('End', 'N/A'),      # Default to 'N/A' if missing
-#             "term": row.get('Term', 'N/A'),         # Default to 'N/A' if missing
-#             "professor": row.get('professor', 'N/A'),  # Handle missing professor
-#             "prereqs": prereqs_dict
-#         }
+        # Construct the class document to insert
+        class_document = {
+            "department": dpt,
+            "course_number": course_number,
+            "title": row['Title'],
+            "credits": row['Credits'],
+            "start_time": row['Begin'],
+            "end_time": row['End'],
+            "term": row['Term'],
+            "professor": row['professor'],
+            "prereqs": prereqs_dict
+        }
         
-#         # Insert into the database
-#         try:
-#             classes_collection.insert_one(class_document)
-#         except Exception as e:
-#             print(f"Error inserting document: {e}")
-
-        
-# process_and_insert_classes("courses_lectures.csv", db)
+        # Insert into the database
+        classes_collection.insert_one(class_document)

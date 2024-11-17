@@ -60,7 +60,8 @@
     <body>
         <div class="container">
             <h2>Sign Up</h2>
-            <form action="{{url_for('signup')}}" method="POST" onsubmit="validateForm()">
+            <form action="{{url_for('signup')}}" method="POST"
+                onsubmit="validateForm()">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
 
@@ -71,7 +72,8 @@
                 <input type="password" id="password" name="password" required>
 
                 <label for="password_confirm">Confirm Password:</label>
-                <input type="password" id="password_confirm" name="password_confirm" required>
+                <input type="password" id="password_confirm"
+                    name="password_confirm" required>
 
                 <!-- Major dropdown -->
                 <label for="major">Major:</label>
@@ -82,12 +84,26 @@
                     <option value="Other">Other</option>
                 </select>
 
+                <!-- Myear -->
+                <label for="semester">What Semester are you going into?</label>
+                <select id="semester" name="semester" required>
+                    <option value="1">Freshman: Fall</option>
+                    <option value="2">Freshman: Spring</option>
+                    <option value="3">Sophomore: Fall</option>
+                    <option value="4">Sophomore: Spring</option>
+                    <option value="5">Junior: Fall</option>
+                    <option value="6">Junior: Spring</option>
+                    <option value="7">Senior: Fall</option>
+                    <option value="8">Senior: Spring</option>
+                </select>
+
                 <div id="courses-container">
                     <h3>Input Courses</h3>
                     <!-- Initially empty for no default courses -->
                 </div>
 
-                <button type="button" onclick="addCourseField()">Add Course</button>
+                <button type="button" onclick="addCourseField()">Add
+                    Course</button>
 
                 <input type="submit" value="Sign Up">
             </form>
