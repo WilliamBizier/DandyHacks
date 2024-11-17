@@ -22,6 +22,8 @@ class user:
         self.token = user_obj['token']
         self.token_date = user_obj['token_date']
         self.classes = user_obj['classes']
+        self.major = user_obj['major']
+        self.goals = user_obj['goals']
         self.socials = user_obj['socials']
 
 
@@ -29,7 +31,7 @@ class user:
 # users -> {username:username,passhash:passwordhash,salt:passwordsalt,_id:user_id,token,exp_date}
 
 # all users are students
-def add_user(username, password, email):
+def add_user(username, password, email, major, classes):
     check = users.find_one({'username': username})
     if check is not None:
         return False  # Username already exists
@@ -43,8 +45,10 @@ def add_user(username, password, email):
             'salt': salt,
             'token': '',
             'token_date': datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"),
-            'classes': [],
-            'socials': []
+            'classes': classes,
+            'major': major,
+            'goals': "",
+            'socials': {}
         })
         return True
 

@@ -99,6 +99,20 @@ def signup():
         password = request.form.get('password', None)
         email = request.form.get('email', None)
         password_confirm = request.form.get('password_confirm', None)
+        major = request.form.get('major', None)
+        
+        departments = request.form.getlist('department[]')
+        course_numbers = request.form.getlist('course_number[]')
+        
+        # classes dictionary
+        classes = {}
+        for dept, course in zip(departments, course_numbers):
+            if dept in classes:
+                classes[dept].append(course)
+            else:
+                classes[dept] = [course]
+        
+        
 
         # Error handling
         if password != password_confirm or not password:
@@ -110,7 +124,6 @@ def signup():
             return response
 
         if not username or username.strip() == '':
-            print("whoop2s")
             error = "Username Field Empty"
             response = make_response(render_template(
                 'pages/signUp.html', error=error, login=login), 200)
@@ -118,16 +131,23 @@ def signup():
             return response
 
         if not email or "@u.rochester.edu" not in email:
-            print("whoops")
             error = "You are not a student"
             response = make_response(render_template(
                 'pages/signUp.html', error=error, login=login), 200)
             response.headers['X-Content-Type-Options'] = 'nosniff'
             return response
+        
+        if not major:
+            error = "how did you even do this you bastard"
+            response = make_response(render_template(
+                'pages/signUp.html', error=error, login=login), 200)
+            response.headers['X-Content-Type-Options'] = 'nosniff'
+            return response 
+            
 
         # Escape and add user to database
         username = html.escape(username)
-        if database.add_user(username, password, email):
+        if database.add_user(username, password, email, major, classes):
             print("added apparently")
             token = secrets.token_hex()
             database.set_user_token(
@@ -151,7 +171,7 @@ def dashboard():
         user = database.get_user_by_token(token=token)
         return render_template('/pages/dashBoard.html')
     else:
-        response = make_response(redirect(url_for('/', _external=True)))
+        response = make_response(redirect(url_for('index', _external=True)))
         response.set_cookie('auth', '', max_age=0)
         return response
 
@@ -163,10 +183,9 @@ def profile():
         user = database.get_user_by_token(token=token)
         return render_template('/pages/profile.html')
     else:
-        response = make_response(redirect(url_for('/', _external=True)))
+        response = make_response(redirect(url_for('index', _external=True)))
         response.set_cookie('auth', '', max_age=0)
         return response
-    pass
 
 @app.route('/schedulebuilder')
 def schedulebuilder():
@@ -175,10 +194,10 @@ def schedulebuilder():
         user = database.get_user_by_token(token=token)
         return render_template('/pages/scheduleBuilder.html')
     else:
-        response = make_response(redirect(url_for('/', _external=True)))
+        response = make_response(redirect(url_for('index', _external=True)))
         response.set_cookie('auth', '', max_age=0)
         return response
-    pass
+
 
 @app.route('/inputClasses')
 def inputclasses(): 

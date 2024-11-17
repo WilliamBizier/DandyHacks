@@ -1,43 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sign Up Page</title>
         <link rel="stylesheet" href="static/CSS-pages/signUp.css">
+        <script>
+            function addCourseField() {
+                // Create a new div for the course input fields
+                const container = document.getElementById('courses-container');
+                const newDiv = document.createElement('div');
+                newDiv.classList.add('course-field');
 
+                // Create and append the department name input field
+                const departmentLabel = document.createElement('label');
+                departmentLabel.setAttribute('for', 'department');
+                departmentLabel.innerText = 'Department:';
+                const departmentInput = document.createElement('input');
+                departmentInput.type = 'text';
+                departmentInput.name = 'department[]';
+                departmentInput.required = true;
+                newDiv.appendChild(departmentLabel);
+                newDiv.appendChild(departmentInput);
+
+                // Create and append the course number input field
+                const courseNumberLabel = document.createElement('label');
+                courseNumberLabel.setAttribute('for', 'course_number');
+                courseNumberLabel.innerText = 'Course Number:';
+                const courseNumberInput = document.createElement('input');
+                courseNumberInput.type = 'text';
+                courseNumberInput.name = 'course_number[]';
+                courseNumberInput.required = true;
+                newDiv.appendChild(courseNumberLabel);
+                newDiv.appendChild(courseNumberInput);
+
+                // Create and append the remove button
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.innerText = 'Remove Course';
+                removeButton.onclick = function() {
+                    container.removeChild(newDiv);
+                };
+                newDiv.appendChild(removeButton);
+
+                // Append the new div to the container
+                container.appendChild(newDiv);
+            }
+
+            function validateForm() {
+                const departmentInputs = document.querySelectorAll('input[name="department[]"]');
+                const courseNumberInputs = document.querySelectorAll('input[name="course_number[]"]');
+                
+                if (departmentInputs.length === 0 || courseNumberInputs.length === 0) {
+                    alert('Please add at least one course or continue without adding.');
+                }
+            }
+        </script>
     </head>
     <body>
-        <body>
-            <div class="container">
-                <h2>Sign Up</h2>
-                <form action="{{url_for('signup')}}" method="POST">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+        <div class="container">
+            <h2>Sign Up</h2>
+            <form action="{{url_for('signup')}}" method="POST" onsubmit="validateForm()">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
 
-                    <label for="email">Email:</label>
-                    <input type="text" id="email" name="email" required>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
 
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password"
-                        required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
 
-                    <label for="password_confirm">Confirm Password:</label>
-                    <input type="password" id="password_confirm"
-                        name="password_confirm" required>
+                <label for="password_confirm">Confirm Password:</label>
+                <input type="password" id="password_confirm" name="password_confirm" required>
 
-                    <input type="submit" value="Sign Up">
-                </form>
-                {% if error != '' %}
-                <p class="Error">{{error}}</p>
-                {% endif %}
+                <!-- Major dropdown -->
+                <label for="major">Major:</label>
+                <select id="major" name="major" required>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Economics">Economics</option>
+                    <option value="Math">Math</option>
+                    <option value="Other">Other</option>
+                </select>
 
-                <p>Already have an account?</p>
+                <div id="courses-container">
+                    <h3>Input Courses</h3>
+                    <!-- Initially empty for no default courses -->
+                </div>
 
-                <a href="{{url_for('index')}}">
-                    <button>Back</button>
-                </a>
-            </div>
-        </body>
-    </html>
+                <button type="button" onclick="addCourseField()">Add Course</button>
+
+                <input type="submit" value="Sign Up">
+            </form>
+
+            {% if error != '' %}
+            <p class="Error">{{error}}</p>
+            {% endif %}
+
+            <p>Already have an account?</p>
+            <a href="{{url_for('index')}}">
+                <button>Back</button>
+            </a>
+        </div>
+    </body>
+</html>
