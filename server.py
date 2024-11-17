@@ -31,7 +31,8 @@ def login():
     # Check if user is already logged in
     token = request.cookies.get('auth', None)
     if token is not None and database.check_token(token):
-        response = make_response(redirect(url_for('dashboard', _external=True)))
+        response = make_response(
+            redirect(url_for('dashboard', _external=True)))
         response.set_cookie('auth', token)
         return response
 
@@ -145,7 +146,6 @@ def signup():
 
 @app.route('/dashboard')
 def dashboard():
-
     token = request.cookies.get('auth', None)
     if (token != None and database.check_token(token=token)):
         user = database.get_user_by_token(token=token)
@@ -154,17 +154,38 @@ def dashboard():
         response = make_response(redirect(url_for('/', _external=True)))
         response.set_cookie('auth', '', max_age=0)
         return response
-    
+
+
 @app.route('/profile')
-def profile(): 
+def profile():
+    token = request.cookies.get('auth', None)
+    if (token != None and database.check_token(token=token)):
+        user = database.get_user_by_token(token=token)
+        return render_template('/pages/profile.html')
+    else:
+        response = make_response(redirect(url_for('/', _external=True)))
+        response.set_cookie('auth', '', max_age=0)
+        return response
     pass
 
 @app.route('/schedulebuilder')
-def scheduleBuilder():
+def schedulebuilder():
+    token = request.cookies.get('auth', None)
+    if (token != None and database.check_token(token=token)):
+        user = database.get_user_by_token(token=token)
+        return render_template('/pages/scheduleBuilder.html')
+    else:
+        response = make_response(redirect(url_for('/', _external=True)))
+        response.set_cookie('auth', '', max_age=0)
+        return response
     pass
 
 @app.route('/inputClasses')
-def inputClasses(): 
+def inputclasses(): 
+    pass
+
+@app.route('/gptFunc')
+def gptFunc():
     pass
 
 app.run(debug=True, host='127.0.0.1', port=8080)

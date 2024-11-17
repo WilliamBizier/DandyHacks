@@ -22,6 +22,8 @@ class user:
         self.token = user_obj['token']
         self.token_date = user_obj['token_date']
         self.classes = user_obj['classes']
+        self.socials = user_obj['socials']
+
 
 
 # users -> {username:username,passhash:passwordhash,salt:passwordsalt,_id:user_id,token,exp_date}
@@ -41,7 +43,8 @@ def add_user(username, password, email):
             'salt': salt,
             'token': '',
             'token_date': datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"),
-            'classes': []
+            'classes': [],
+            'socials': []
         })
         return True
 

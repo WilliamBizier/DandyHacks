@@ -1,0 +1,8 @@
+@import url('../global.css');
+
+
+.profFroms{
+    display: flex;
+    flex-direction: column;
+    
+}
