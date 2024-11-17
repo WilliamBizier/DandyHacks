@@ -1,11 +1,11 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='static/CSS-components/navBar.css') }}">
 <nav class="navbar">
     <div class="logo">
-        <img src="{{ url_for('static', filename='static/assets/images/Dr-Nefario.png') }}" alt="Gnome Hat Logo">
+        <img src="{{ url_for('static', filename='static/assets/images/Dr-Nefario.png') }}">
         <span>Schedule Genintator</span>
     </div>
     <div class="nav-links">
-        <a href="{{ url_for('index') }}" class="{% if active_page == 'dashboard' %}active{% endif %}">
+        <a href="{{ url_for('dashboard') }}" class="{% if active_page == 'dashboard' %}active{% endif %}">
             <i class="fas fa-home"></i> Home
         </a>
         <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">

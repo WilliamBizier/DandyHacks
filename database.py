@@ -21,7 +21,6 @@ class user:
         self.id = user_obj['_id']
         self.token = user_obj['token']
         self.token_date = user_obj['token_date']
-        self.student = user_obj['student']
         self.classes = user_obj['classes']
 
 

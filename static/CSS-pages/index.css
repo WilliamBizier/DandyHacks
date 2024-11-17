@@ -1,19 +1,19 @@
 @import url('../global.css');
 
-
 body {
-    background-color: var(--background);
-    color: var(--text-main);
-    font-family: Jetbrains-Light;
-    letter-spacing: .1rem;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 1rem;
-    box-sizing: border-box;
-  }
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: Jetbrains-Light;
+  letter-spacing: .1rem;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
 
 
 /* tablet */
